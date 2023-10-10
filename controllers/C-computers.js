@@ -7,7 +7,8 @@ const getAll = (req, res) => {
   pool.query('SELECT * FROM computers', (err, rows, fields) => {
     if (err) {
       console.error('Error fetching data from the database:', err);
-      res.status(500).json({ error: 'Internal Server Error' });
+      // res.status(500).json({ error: 'Internal Server Error' });
+      res.json(err)
     } else {
       res.json(rows);
     }
