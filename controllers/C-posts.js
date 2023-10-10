@@ -1,14 +1,14 @@
-const pool = require('../sql/connection')
+// const pool = require('../sql/connection')
 
-const list = (req, res) => {
-  const {user_id} = req.params
-  pool.query('SELECT post_title, post_body FROM posts WHERE user_id = ?',[user_id], (err, rows, fields) => {
-    if(err){
-      return res.status(500).json({message: err.message})
-    } 
-    res.json(rows)
-  })
-}
+// const list = (req, res) => {
+//   const {user_id} = req.params
+//   pool.query('SELECT post_title, post_body FROM posts WHERE user_id = ?',[user_id], (err, rows, fields) => {
+//     if(err){
+//       return res.status(500).json({message: err.message})
+//     } 
+//     res.json(rows)
+//   })
+// }
 
 // const show = (req, res) => {
 //   const {id} = req.params

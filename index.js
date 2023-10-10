@@ -1,11 +1,11 @@
 const express = require('express')
-const authenticateJWT = require('./auth')
+// const authenticateJWT = require('./auth')
 // const usersRouter = require('./src/routes/R-users')
 // const signinRouter = require('./src/routes/R-signin')
 // const signupRouter = require('./src/routes/R-signup')
 // const postsRouter = require('./src/routes/R-posts')
 const computerRouter = require('./routes/R-computers')
-const inventoryRouter = require('./routes/R-inventory')
+// const inventoryRouter = require('./routes/R-inventory')
 const cors = require('cors')
 
 
@@ -47,7 +47,7 @@ app.use(function (req, res, next) {
 // app.use('/', signupRouter)
 // app.use('/', postsRouter)
 app.use('/', computerRouter)
-app.use('/', inventoryRouter)
+// app.use('/', inventoryRouter)
 
 
 
