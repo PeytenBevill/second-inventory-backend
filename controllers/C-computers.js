@@ -14,17 +14,17 @@ const getAll = (req, res) => {
   });
 };
 
-// const addComputer = async (req, res) => {
-//   const {computer_num} = req.body
+const addComputer = async (req, res) => {
+  const {computer_num} = req.body
 
-//   pool.query('INSERT INTO computers (computer_num) VALUES (?)', [computer_num], (err, rows, fields) => {
-//     res.json({
-//       message: 'Computer added!'
-//     })
-//   })
-// }
+  pool.query('INSERT INTO computers (computer_num) VALUES (?)', [computer_num], (err, rows, fields) => {
+    res.json({
+      message: 'Computer added!'
+    })
+  })
+}
 
 module.exports = {
   getAll,
-  // addComputer
+  addComputer
 }
