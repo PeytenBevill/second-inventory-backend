@@ -3,7 +3,6 @@ const pool = require('../sql/connection')
 
 //testing connection
 const getAll = (req, res) => {
-  console.time()
   pool.query('SELECT * FROM computers', (err, rows, fields) => {
     if (err) {
       console.error('Error fetching data from the database:', err);
