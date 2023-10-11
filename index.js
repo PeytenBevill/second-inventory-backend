@@ -1,5 +1,6 @@
 const express = require("express");
 const connection = require("./sql/connection");
+const cors = require("cors");
 
 const app = express();
 
@@ -7,6 +8,14 @@ const PORT = 8080;
 
 app.use(express.json());
 // app.use(cors())
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: "GET,POST,PUT,DELETE",
+    allowedHeaders: "Content-Type,Authorization",
+    optionsSuccessStatus: 200,
+  })
+);
 
 app.get("/", (req, res) => {
   res.json({
@@ -136,17 +145,16 @@ app.delete("/inventory/:id", (req, res) => {
   );
 });
 
-app.get('/computers', (req, res) => {
-  connection.query('SELECT * FROM computers', (err, rows, fields) => {
+app.get("/computers", (req, res) => {
+  connection.query("SELECT * FROM computers", (err, rows, fields) => {
     if (err) {
-      console.error('Error fetching data from the database:', err);
-      res.status(500).json({ error: 'Internal Server Error' });
+      console.error("Error fetching data from the database:", err);
+      res.status(500).json({ error: "Internal Server Error" });
     } else {
       res.json(rows);
     }
   });
-})
-
+});
 
 app.listen(PORT, () => {
   console.log("listening on port", PORT);
