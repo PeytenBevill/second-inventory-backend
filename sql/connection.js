@@ -5,6 +5,9 @@ const connection = mysql2.createConnection({
   user: 'admin',
   password: 'Redhead814!',
   database: 'inventorydb',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0 
 })
 
 module.exports = connection
