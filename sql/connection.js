@@ -1,13 +1,16 @@
-const mysql2 = require('mysql2')
+const mysql = require('mysql2')
+require('dotenv').config()
 
-const connection = mysql2.createConnection({
-  host: 'database-2.c400waytzxzf.us-east-1.rds.amazonaws.com',
-  user: 'admin',
-  password: 'Inventorypassword',
-  database: 'inventorydb',
-  // waitForConnections: true,
-  // connectionLimit: 10,
-  // queueLimit: 0 
-})
+const {DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE, DB_PORT} = process.env
 
-module.exports = connection
+const pool = mysql.createPool({
+  connectionLimit: 100,
+  host: DB_HOST,
+  user: DB_USER,
+  password: DB_PASSWORD,
+  database: DB_DATABASE,
+  port: DB_PORT
+});
+
+
+module.exports = pool;
