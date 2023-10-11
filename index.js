@@ -10,7 +10,7 @@ app.use(express.json());
 
 app.get("/", (req, res) => {
   res.json({
-    message: "Welcome to my API",
+    message: "New attempt at building this API",
   });
 });
 
