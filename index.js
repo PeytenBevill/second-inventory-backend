@@ -136,6 +136,17 @@ app.delete("/inventory/:id", (req, res) => {
   );
 });
 
+app.get('/computers', (req, res) => {
+  connection.query('SELECT * FROM computers', (err, rows, fields) => {
+    if (err) {
+      console.error('Error fetching data from the database:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      res.json(rows);
+    }
+  });
+})
+
 
 app.listen(PORT, () => {
   console.log("listening on port", PORT);
