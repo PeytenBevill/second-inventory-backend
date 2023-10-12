@@ -156,6 +156,16 @@ app.get("/computers", (req, res) => {
   });
 });
 
+app.get("/saleHistory", (req, res) => {
+  connection.query("SELECT * FROM sale_history", (err, results) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.json(results);
+    }
+  });
+});
+
 app.post("/saleHistory", (req, res) => {
   const {product, company, unit_cost, total, computer_num, date} = req.body
   connection.query("INSERT INTO sale_history (product, company, unit_cost, total, computer_num, date) VALUES (?, ?, ?, ?, ?, ?)", [product, company, unit_cost, total, computer_num, date], (err, rows, fields) => {
