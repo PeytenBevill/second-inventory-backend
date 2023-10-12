@@ -166,14 +166,34 @@ app.get("/saleHistory", (req, res) => {
   });
 });
 
+// app.post("/saleHistory", (req, res) => {
+//   const {product, quantity, unit_cost, total, computer_num, date} = req.body
+//   connection.query("INSERT INTO sale_history (product, quantity, unit_cost, total, computer_num, date) VALUES (?, ?, ?, ?, ?, ?)", [product, quantity, unit_cost, total, computer_num, date], (err, rows, fields) => {
+//     res.json({
+//       message: "Sale added!",
+//     });
+//   })
+// })
+
 app.post("/saleHistory", (req, res) => {
-  const {product, quantity, unit_cost, total, computer_num, date} = req.body
-  connection.query("INSERT INTO sale_history (product, quantity, unit_cost, total, computer_num, date) VALUES (?, ?, ?, ?, ?, ?)", [product, quantity, unit_cost, total, computer_num, date], (err, rows, fields) => {
-    res.json({
-      message: "Sale added!",
-    });
-  })
-})
+  const { items, computer_num, date } = req.body;
+
+  const itemsJSON = JSON.stringify(items);
+
+  connection.query(
+    "INSERT INTO sale_history (receipt_data, computer_num, date) VALUES (?, ?, ?)",
+    [itemsJSON, computer_num, date],
+    (err, rows, fields) => {
+      if (err) {
+        console.error("Error inserting data:", err);
+        res.status(500).json({ error: "An error occurred" });
+      } else {
+        res.json({ message: "Sale added!" });
+      }
+    }
+  );
+});
+
 
 app.listen(PORT, () => {
   console.log("listening on port", PORT);
