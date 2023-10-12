@@ -176,13 +176,13 @@ app.get("/saleHistory", (req, res) => {
 // })
 
 app.post("/saleHistory", (req, res) => {
-  const { items, computer_num, date } = req.body;
+  const { items, total, computer_num, date } = req.body;
 
   const itemsJSON = JSON.stringify(items);
 
   connection.query(
-    "INSERT INTO sale_history (receipt_data, computer_num, date) VALUES (?, ?, ?)",
-    [itemsJSON, computer_num, date],
+    "INSERT INTO sale_history (receipt_data, total, computer_num, date) VALUES (?, ?, ?, ?)",
+    [itemsJSON, total, computer_num, date],
     (err, rows, fields) => {
       if (err) {
         console.error("Error inserting data:", err);
