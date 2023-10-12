@@ -167,8 +167,8 @@ app.get("/saleHistory", (req, res) => {
 });
 
 app.post("/saleHistory", (req, res) => {
-  const {product, company, unit_cost, total, computer_num, date} = req.body
-  connection.query("INSERT INTO sale_history (product, company, unit_cost, total, computer_num, date) VALUES (?, ?, ?, ?, ?, ?)", [product, company, unit_cost, total, computer_num, date], (err, rows, fields) => {
+  const {product, quantity, unit_cost, total, computer_num, date} = req.body
+  connection.query("INSERT INTO sale_history (product, quantity, unit_cost, total, computer_num, date) VALUES (?, ?, ?, ?, ?, ?)", [product, quantity, unit_cost, total, computer_num, date], (err, rows, fields) => {
     res.json({
       message: "Sale added!",
     });
