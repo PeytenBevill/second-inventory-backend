@@ -156,6 +156,15 @@ app.get("/computers", (req, res) => {
   });
 });
 
+app.post("/saleHistory", (req, res) => {
+  const {product, company, unit_cost, total, computer_num, date} = req.body
+  connection.query("INSERT INTO sale_history (product, company, unit_cost, total, computer_num, date) VALUES (?, ?, ?, ?, ?, ?)", [product, company, unit_cost, total, computer_num, date], (err, rows, fields) => {
+    res.json({
+      message: "Sale added!",
+    });
+  })
+})
+
 app.listen(PORT, () => {
   console.log("listening on port", PORT);
 });
