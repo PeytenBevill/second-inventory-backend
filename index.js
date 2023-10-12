@@ -10,7 +10,8 @@ app.use(express.json());
 // app.use(cors())
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    // origin: "http://localhost:5173",
+    origin: "https://elegant-donut-fc6e45.netlify.app",
     methods: "GET,POST,PUT,DELETE",
     allowedHeaders: "Content-Type,Authorization",
     optionsSuccessStatus: 200,
