@@ -166,14 +166,35 @@ app.get("/saleHistory", (req, res) => {
   });
 });
 
-// app.post("/saleHistory", (req, res) => {
-//   const {product, quantity, unit_cost, total, computer_num, date} = req.body
-//   connection.query("INSERT INTO sale_history (product, quantity, unit_cost, total, computer_num, date) VALUES (?, ?, ?, ?, ?, ?)", [product, quantity, unit_cost, total, computer_num, date], (err, rows, fields) => {
-//     res.json({
-//       message: "Sale added!",
-//     });
-//   })
-// })
+app.get("/saleHistory/worker/:computer_num", (req, res) => {
+  const { computer_num } = req.params;
+  connection.query(
+    "SELECT * FROM sale_history WHERE computer_num = ?",
+    [computer_num],
+    (err, results) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.json(results);
+      }
+    }
+  );
+});
+
+app.get("/saleHistory/date/:date", (req, res) => {
+  const { date } = req.params;
+  connection.query(
+    "SELECT * FROM sale_history WHERE date = ?",
+    [date],
+    (err, results) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.json(results);
+      }
+    }
+  );
+});
 
 app.post("/saleHistory", (req, res) => {
   const { items, total, computer_num, date } = req.body;
@@ -193,7 +214,6 @@ app.post("/saleHistory", (req, res) => {
     }
   );
 });
-
 
 app.listen(PORT, () => {
   console.log("listening on port", PORT);
