@@ -167,11 +167,11 @@ app.get("/saleHistory", (req, res) => {
   });
 });
 
-app.get("/saleHistory/worker/:computer_num", (req, res) => {
-  const { computer_num } = req.params;
+app.get("/saleHistory/cost", (req, res) => {
+  const { total } = req.body;
   connection.query(
-    "SELECT * FROM sale_history WHERE computer_num = ?",
-    [computer_num],
+    "SELECT * FROM sale_history WHERE total = ?",
+    [total],
     (err, results) => {
       if (err) {
         console.log(err);
