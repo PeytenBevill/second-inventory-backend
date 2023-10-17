@@ -167,8 +167,8 @@ app.get("/saleHistory", (req, res) => {
   });
 });
 
-app.get("/saleHistory/cost", (req, res) => {
-  const { total } = req.body;
+app.get("/saleHistory/cost/:cost", (req, res) => {
+  const { total } = req.params;
   connection.query(
     "SELECT * FROM sale_history WHERE total = ?",
     [total],
