@@ -168,10 +168,10 @@ app.get("/saleHistory", (req, res) => {
 });
 
 app.get("/saleHistory/cost/:cost", (req, res) => {
-  const { total } = req.params;
+  const { cost } = req.params;
   connection.query(
     "SELECT * FROM sale_history WHERE total = ?",
-    [total],
+    [cost],
     (err, results) => {
       if (err) {
         console.log(err);
