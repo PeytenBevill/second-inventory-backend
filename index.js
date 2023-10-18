@@ -216,6 +216,81 @@ app.post("/saleHistory", (req, res) => {
   );
 });
 
+app.get("/holds/:phone_num", (req, res) => {
+  const { phone_num } = req.params;
+  connection.query(
+    "SELECT * FROM holds WHERE phone_num = ?",
+    [phone_num],
+    (err, results) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.json(results);
+      }
+    }
+  );
+});
+
+app.post("/holds", (req, res) => {
+  const {
+    first_name,
+    last_name,
+    email,
+    phone_num,
+    receipt_data,
+    total,
+    remaining_balance,
+    computer_num,
+    date,
+  } = req.body;
+
+  const itemsJSON = JSON.stringify(receipt_data);
+
+  connection.query(
+    "INSERT INTO holds (first_name, last_name, email, phone_num, itemsJSON, total, remaining_balance, computer_num, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    [
+      first_name,
+      last_name,
+      email,
+      phone_num,
+      itemsJSON,
+      total,
+      remaining_balance,
+      computer_num,
+      date,
+    ],
+    (err, rows, fields) => {
+      if (err) {
+        console.error("Error inserting data:", err);
+        res.status(500).json({ error: "An error occurred" });
+      } else {
+        res.json({ message: "Hold added!" });
+      }
+    }
+  );
+});
+
+app.put("/holds/remaining_balance/:id", (req, res) => {
+  const { remaining_balance } = req.body;
+  const { id } = req.params;
+
+  connection.query(
+    "UPDATE holds SET remaining_balance = ? WHERE id = ?",
+    [remaining_balance, id],
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({ message: err.message });
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: "Account not found" });
+      }
+
+      res.json({ message: "Balance updated" });
+    }
+  );
+});
+
 app.listen(PORT, () => {
   console.log("listening on port", PORT);
 });
