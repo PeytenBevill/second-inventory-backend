@@ -243,7 +243,7 @@ app.post("/holds", (req, res) => {
     computer_num,
     date,
   } = req.body;
-
+  console.log("backend log", remaining_balance)
   const itemsJSON = JSON.stringify(receipt_data);
 
   connection.query(
