@@ -247,7 +247,7 @@ app.post("/holds", (req, res) => {
   const itemsJSON = JSON.stringify(receipt_data);
 
   connection.query(
-    "INSERT INTO holds (first_name, last_name, email, phone_num, itemsJSON, total, remaining_balance, computer_num, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    "INSERT INTO holds (first_name, last_name, email, phone_num, receipt_data, total, remaining_balance, computer_num, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
     [
       first_name,
       last_name,
@@ -269,6 +269,7 @@ app.post("/holds", (req, res) => {
     }
   );
 });
+
 
 app.put("/holds/remaining_balance/:id", (req, res) => {
   const { remaining_balance } = req.body;
