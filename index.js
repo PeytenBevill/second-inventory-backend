@@ -157,6 +157,18 @@ app.get("/computers", (req, res) => {
   });
 });
 
+app.put("/computers/:id", (req, res) => {
+  const { id } = req.params;
+  const { comp_status } = req.body;
+  connection.query("UPDATE computers SET comp_status = ? WHERE computer_num = ?", [comp_status, id], (err, rows, fields) => {
+    if (err) {
+      console.log("Error updating computer status:", err)
+    } else {
+      res.json({message: "Computer status updated"})
+    }
+  });
+});
+
 app.get("/saleHistory", (req, res) => {
   connection.query("SELECT * FROM sale_history", (err, results) => {
     if (err) {
@@ -243,7 +255,7 @@ app.post("/holds", (req, res) => {
     computer_num,
     date,
   } = req.body;
-  console.log("backend log", remaining_balance)
+  console.log("backend log", remaining_balance);
   const itemsJSON = JSON.stringify(receipt_data);
 
   connection.query(
@@ -269,7 +281,6 @@ app.post("/holds", (req, res) => {
     }
   );
 });
-
 
 app.put("/holds/remaining_balance/:id", (req, res) => {
   const { remaining_balance } = req.body;
