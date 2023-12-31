@@ -1,4 +1,5 @@
 const express = require("express");
+const usb = require("usb");
 const connection = require("./sql/connection");
 const cors = require("cors");
 
@@ -10,8 +11,8 @@ app.use(express.json());
 // app.use(cors())
 app.use(
   cors({
-    origin: "http://localhost:5173",
-    // origin: "https://main--elegant-donut-fc6e45.netlify.app",
+    // origin: "http://localhost:5173",
+    origin: "https://main--elegant-donut-fc6e45.netlify.app",
     methods: "GET,POST,PUT,DELETE",
     allowedHeaders: "Content-Type,Authorization",
     optionsSuccessStatus: 200,
@@ -160,13 +161,17 @@ app.get("/computers", (req, res) => {
 app.put("/computers/:id", (req, res) => {
   const { id } = req.params;
   const { comp_status } = req.body;
-  connection.query("UPDATE computers SET comp_status = ? WHERE computer_num = ?", [comp_status, id], (err, rows, fields) => {
-    if (err) {
-      console.log("Error updating computer status:", err)
-    } else {
-      res.json({message: "Computer status updated"})
+  connection.query(
+    "UPDATE computers SET comp_status = ? WHERE computer_num = ?",
+    [comp_status, id],
+    (err, rows, fields) => {
+      if (err) {
+        console.log("Error updating computer status:", err);
+      } else {
+        res.json({ message: "Computer status updated" });
+      }
     }
-  });
+  );
 });
 
 app.get("/saleHistory", (req, res) => {
@@ -301,6 +306,88 @@ app.put("/holds/remaining_balance/:id", (req, res) => {
       res.json({ message: "Balance updated" });
     }
   );
+});
+
+
+
+//USB SCAN
+
+app.get('/check-scanner', (req, res) => {
+  const device = usb.findByIds(0x05E0, 0x1200); // Vendor ID and Product ID for CipherLab 8000
+
+  if (device) {
+    res.json({ isScannerConnected: true });
+  } else {
+    res.json({ isScannerConnected: false });
+  }
+});
+
+
+app.post('/start-scan', (req, res) => {
+  const device = usb.findByIds(0x05E0, 0x1200); // Vendor ID and Product ID for CipherLab 8000
+
+  if (device) {
+    // Open the USB device
+    device.open();
+
+    // Claim the scanner interface
+    const scannerInterface = device.interface(0);
+    scannerInterface.claim();
+
+    // Listen for data on the USB interface
+    scannerInterface.on('data', (data) => {
+      const scannedData = data.toString('utf8');
+      console.log('Scanned Data:', scannedData);
+
+      // Process the scanned data and save it to the database using the item code
+      connection.query(
+        'SELECT * FROM items WHERE item_code = ?',
+        [scannedData],
+        (error, results) => {
+          if (error) {
+            console.error('Error querying the database:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+          }
+
+          if (results.length > 0) {
+            // If the item code exists, increment the quantity
+            connection.query(
+              'UPDATE items SET quantity = quantity + 1 WHERE item_code = ?',
+              [scannedData],
+              (updateError) => {
+                if (updateError) {
+                  console.error('Error updating quantity:', updateError);
+                  res.status(500).json({ error: 'Internal Server Error' });
+                  return;
+                }
+                console.log('Quantity updated successfully');
+                res.json({ message: 'Data received successfully' });
+              }
+            );
+          } else {
+            // If the item code doesn't exist, insert a new record with quantity 1
+            connection.query(
+              'INSERT INTO items (item_code, quantity) VALUES (?, 1)',
+              [scannedData],
+              (insertError) => {
+                if (insertError) {
+                  console.error('Error inserting new record:', insertError);
+                  res.status(500).json({ error: 'Internal Server Error' });
+                  return;
+                }
+                console.log('New record inserted successfully');
+                res.json({ message: 'Data received successfully' });
+              }
+            );
+          }
+        }
+      );
+    });
+  } else {
+    console.error('CipherLab scanner not found.');
+    res.status(500).json({ error: 'CipherLab scanner not found' });
+  }
 });
 
 app.listen(PORT, () => {
